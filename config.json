@@ -94,5 +94,8 @@
     "borrowingHistory": [],
     "fines": 0
   } 
- ]
+ ],
+ "borrowLimit":3,
+ "finePerDay":5,
+ "maximumBorrowingDays":7
  }
