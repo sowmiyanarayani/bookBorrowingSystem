@@ -1,70 +1,70 @@
 {
   "listOfBooks": [
     {
-      "id": 101,
+      
       "title": "The Great Gatsby",
       "author": "F. Scott Fitzgerald",
       "genre": "Classic",
-      "Available": "True"
+      "available": "True"
     },
     {
-      "id": 102,
+      
       "title": "1984",
       "author": "George Orwell",
       "genre": "Dystopian",
-      "Available": "True"
+      "available": "True"
     },
     {
-      "id": 103,
+     
       "title": "To Kill a Mockingbird",
       "author": "Harper Lee",
       "genre": "Classic",
-      "Available": "True"
+      "available": "True"
     },
     {
-      "id": 104,
+      
       "title": "Dune",
       "author": "Frank Herbert",
       "genre": "Science Fiction",
-      "Available": "True"
+      "available": "True"
     },
     {
-      "id": 105,
+      
       "title": "Panchatantra Stories",
       "author": "Vishnu Sharma",
       "genre": "Short Stories",
       "available": "True"
     },
     {
-      "id": 106,
+      
       "title": "The Hitchhiker's Guide to the Galaxy",
       "author": "Douglas Adams",
       "genre": "Science Fiction",
       "available": "True"
     },
     {
-      "id": 107,
+     
       "title": "Jungle Book",
       "author": "Rudyard Kipling",
       "genre": "Adventure",
       "available": "True"
     },
     {
-      "id": 201,
+      
       "title": "Ponniyin Selvan",
       "author": "Kalki Krishnamurthy",
       "genre": "Historical Fiction",
       "available": "True"
     },
     {
-      "id": 202,
+      
       "title": "Thirukkural",
       "author": "Thiruvalluvar",
       "genre": "Didactic Literature",
       "available": "True"
     },
     {
-      "id": 203,
+      
       "title": "Silappatikaram",
       "author": "Ilango Adigal",
       "genre": "Epic Poetry",
@@ -74,21 +74,20 @@
 
   "usersData": [
    {
-    "userId": "user-alice-001",
+    
     "name": "Alice",
     "borrowedBooks": [],
     "borrowingHistory": [],
     "fines": 0
    },
   {
-    "userId": "user_bob_002",
     "name": "Bob",
     "borrowedBooks": [],
     "borrowingHistory": [],
     "fines": 0
    },
   {
-    "userId": "user_charlie_003",
+   
     "name": "Charlie",
     "borrowedBooks": [],
     "borrowingHistory": [],
