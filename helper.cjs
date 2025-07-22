@@ -5,7 +5,7 @@ const getRandomNumber =(min,max)=> Math.floor(Math.random() * (max - min + 1)) +
 const getRandomId = () => getRandomNumber(100000,999999);
 
 const addBookIds = () => listOfBooks.map(book => ({
-    id: getRandomId(),
+    bookId: getRandomId(),
     ...book
   }));
 
@@ -13,8 +13,14 @@ const addUserIds = () => usersData.map(user => ({
     userId: getRandomId(),
     ...user
   }));
+const updatedListOfBooks = addBookIds()
+const updatedUsersData= addUserIds();
 
-  
- 
-  console.table(addBookIds())
-  console.table(addUserIds())
+ const listOfAvailableBooks = (updatedListOfBooks) =>
+  updatedListOfBooks
+    .filter(book => book.available)
+    .map(({ bookId, title, author }) => `${bookId}- ${title} by ${author}`);
+
+  console.table(updatedListOfBooks)
+  console.table(updatedUsersData)
+  console.log(listOfAvailableBooks(updatedListOfBooks))
