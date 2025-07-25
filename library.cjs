@@ -9,6 +9,7 @@ const { listOfBooks, usersData } = config;
 const updatedListOfBooks = listOfBooks;
 
 
+
 const listOfAvailableBooks = (updatedListOfBooks) =>
   updatedListOfBooks
     .filter(book => book.available)
