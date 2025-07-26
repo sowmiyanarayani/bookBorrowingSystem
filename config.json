@@ -65,7 +65,7 @@
     },
     {
       "bookId":19131,
-      "title": "Silappatikaram",
+      "title": "Silappathikaram",
       "author": "Ilango Adigal",
       "genre": "Epic Poetry",
       "available": "True" 
@@ -91,11 +91,39 @@
     "userId":2019010,
     "name": "Charlie",
     "borrowedBooks": [
-      { "title": "1984", "dueDate": "15/07/2025" },
-      {"title": "Dune", "dueDate": "17/07/2025"},
-      { "title": "Silappatikaram", "dueDate":"20/07/2025"}
-    ],
-    "borrowingHistory": [],
+    {
+     "bookId":900124,
+     "title": "1984",
+     "dueDate": "15/07/2025" 
+    },
+    {
+      "bookId":900126,
+      "title": "Dune",
+      "dueDate": "17/07/2025"
+    },
+    { 
+      "bookId":19131,
+      "title": "Silappatikaram", 
+      "dueDate":"20/07/2025"
+    }
+  ],
+    "borrowingHistory": [
+      {
+     "bookId":900124,
+     "title": "1984",
+     "dueDate": "15/07/2025" 
+    },
+    {
+      "bookId":900126,
+      "title": "Dune",
+      "dueDate": "17/07/2025"
+    },
+    { 
+      "bookId":19131,
+      "title": "Silappatikaram", 
+      "dueDate":"20/07/2025"
+    }
+   ],
     "fines": 0
   } 
  ],

@@ -62,7 +62,19 @@ const isUserEligibleToBorrow = (user) =>
   user.borrowedBooks.length < borrowLimit;
 
 
+const calculateFine = (dueDate) => {
+  const today = new Date();
+  const due = new Date(dueDate);
+  return today > due
+    ? Math.ceil((today - due) / (1000 * 60 * 60 * 24)) * 5
+    : 0;
+};
+  
+
+
  module.exports = {
   isUserEligibleToBorrow,
   checkBookAvailability,
+  calculateFine,
+ 
 };
