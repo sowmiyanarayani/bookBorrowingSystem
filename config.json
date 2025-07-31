@@ -97,8 +97,8 @@
      "dueDate": "15/07/2025" 
     },
     {
-      "bookId":900126,
-      "title": "Dune",
+      "bookId":900130,
+      "title": "Ponniyin Selvan",
       "dueDate": "17/07/2025"
     },
     { 
@@ -109,25 +109,25 @@
   ],
     "borrowingHistory": [
       {
-     "bookId":900124,
-     "title": "1984",
-     "dueDate": "15/07/2025" 
-    },
-    {
-      "bookId":900126,
-      "title": "Dune",
-      "dueDate": "17/07/2025"
-    },
-    { 
-      "bookId":19131,
-      "title": "Silappatikaram", 
-      "dueDate":"20/07/2025"
-    }
+        "bookId":900127,
+        "title": "Panchatantra Stories",
+        "dueDate": "15/05/2025" 
+      },
+      {
+        "bookId":900126,
+        "title": "Dune",
+        "dueDate": "17/04/2025"
+      },
+      { 
+        "bookId":900129,
+        "title": "Jungle Book",
+        "dueDate":"20/01/2025"
+      }
    ],
     "fines": 0
   } 
  ],
  "borrowLimit":3,
- "finePerDay":5,
+ "finePerDay":2,
  "maximumBorrowingDays":7
  }

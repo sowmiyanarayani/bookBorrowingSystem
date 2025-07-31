@@ -2,61 +2,58 @@ const config = require('./config.json');
 const {
   isUserEligibleToBorrow,
   checkBookAvailability,
-  calculateFine,
+  processBookReturn,
+  isBookBorrowedByUser
   
   } = require('./helper.cjs');
 
 const { listOfBooks, usersData } = config;
 
 
-const listOfAvailableBooks = (listOfBooks) =>
+const listOfAvailableBooks = () =>
 listOfBooks
     .filter(book => book.available)
     .map(({ bookId, title, author }) => `${bookId}- ${title} by ${author}`);
 
 
 const borrowBook = (userId, bookId, usersData, booksData) => {
-  const user = usersData.find(u => u.userId === userId);
+  const user = usersData.find(user => user.userId === userId);
   
-  return!isUserEligibleToBorrow(user)
+  return !isUserEligibleToBorrow(user)
     ? `${user.name} has reached the borrow limit.`
     : checkBookAvailability(userId, bookId, usersData, booksData);
 };
 
-const returnBook = (userId, bookId, usersData, listOfBooks) => {
-  const user = usersData.find(u => u.userId === userId);
-  const book = listOfBooks.find(b => b.bookId === bookId);
-  const borrowedBook = user.borrowedBooks.find(b => b.bookId === bookId);
 
-  const fine = calculateFine(borrowedBook.dueDate);
+const returnBook = (userId, bookId) => !isBookBorrowedByUser
+      ? "Book was not borrowed by this user." 
+      : processBookReturn(userId, bookId);
 
-  book.available = true;
-  user.borrowedBooks = user.borrowedBooks.filter(b => b.bookId !== bookId);
 
-  return {
-    message: fine
-      ? `Book returned late. Fine amount: ₹${fine}`
-      : "Book returned successfully. No fine.",
-      ...user,
+const searchBooks = (query) => listOfBooks
+   .filter(book =>
+     book.title.toLowerCase().includes(query) ||
+     book.author.toLowerCase().includes(query))
+    .map(book => `${book.bookId}. ${book.title} by ${book.author}`);
+
+  
+const registerUser = (name, usersData) => {
+  let lastUserId = 192010;
+  const newUser = {
+    userId: ++lastUserId, 
+    name,
+    borrowedBooks: [],
+    history: []
   };
+
+  return [...usersData, newUser]; 
 };
-
-const searchBooks = (query) => {
-  const lowerQuery = query.toLowerCase();
-
-  const matchedBooks = listOfBooks.filter(book =>
-    book.title.toLowerCase().includes(lowerQuery) ||
-    book.author.toLowerCase().includes(lowerQuery)
-  );
-
-  const searchBook = matchedBooks.map(book => `${book.bookId}. ${book.title} by ${book.author}`);
-
-  return searchBook;
-};
-
 
 console.log("Available books:", listOfAvailableBooks(listOfBooks));
-console.log("Borrow result:",JSON.stringify( borrowBook(2019008, 900124, usersData, listOfBooks),null,2));
-console.log("Return book:", returnBook(2019010, 900124, usersData, listOfBooks))
-console.log("Search books", searchBooks("adi"))
+console.log("Borrow result:",JSON.stringify( borrowBook(2019007, 900124, usersData, listOfBooks),null,2));
+console.log("Return result:",JSON.stringify( returnBook(2019010, 19131, usersData, listOfBooks),null,2));
+console.log("borrow book:", borrowBook(2019007, 900124, usersData, listOfBooks))
+//console.log("Return book:", returnBook(2019010, 900126, usersData, listOfBooks))
+console.log("Search books", searchBooks("pancha"))
+console.log("user registration:", registerUser("Jency", usersData))
 

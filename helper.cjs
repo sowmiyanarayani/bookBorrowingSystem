@@ -1,21 +1,12 @@
 const config = require('./config.json');
-const { borrowLimit, maximumBorrowingDays, finePerDay} = config;
+const { borrowLimit, maximumBorrowingDays, usersData, listOfBooks} = config;
 
-const getRandomNumber =(min,max)=> Math.floor(Math.random() * (max - min + 1)) +min;
-const getRandomId = () => getRandomNumber(100000,999999);
 
-/*const addBookIds = () => listOfBooks.map(book => ({
-    bookId: getRandomId(),
-    ...book
-  }));
-
-const addUserIds = () => usersData.map(user => ({
-    userId: getRandomId(),
-    ...user
-  }));
-*/
-const calculateDueDate = () =>
-  new Date(Date.now() + maximumBorrowingDays * 86400000).toLocaleDateString();
+const calculateDueDate = () => {
+  const date = new Date();
+  date.setDate(date.getDate() + maximumBorrowingDays);
+  return date.toLocaleDateString(); 
+};
 
 
 const updateUserBorrowing = (user, book, dueDate) => ({
@@ -27,19 +18,11 @@ const updateUserBorrowing = (user, book, dueDate) => ({
       title: book.title,
       dueDate
     }
-  ],
-  borrowingHistory: [
-    ...user.borrowingHistory,
-    {
-      bookId: book.bookId,
-      title: book.title,
-      dueDate
-    }
   ]
-});
+ });
 
 
-const checkOutProcess = (userId, book, usersData) => {
+const checkOutProcess = (userId, book) => {
   const dueDate = calculateDueDate();
   book.available = false;
 
@@ -49,11 +32,11 @@ const checkOutProcess = (userId, book, usersData) => {
 };
 
 
-const checkBookAvailability = (userId, bookId, usersData, booksData) => {
-  const book = booksData.find(b => b.bookId === bookId);
+const checkBookAvailability = (userId, bookId) => {
+  const book = listOfBooks.find(book => book.bookId === bookId);
 
    return book.available
-    ? checkOutProcess(userId, book, usersData)
+    ? checkOutProcess(userId, book)
     : "Book not available";
 };
 
@@ -66,15 +49,77 @@ const calculateFine = (dueDate) => {
   const today = new Date();
   const due = new Date(dueDate);
   return today > due
-    ? Math.ceil((today - due) / (1000 * 60 * 60 * 24)) * 5
+    ? Math.ceil((today - due) / (1000 * 60 * 60 * 24)) * 2
     : 0;
 };
+ 
+
+const isBookBorrowedByUser = (user, bookId) => {
+  return user && user.borrowedBooks.some(book => book.bookId === bookId);
+};
+
+
+const getReturnMessage = fine => 
+  fine 
+    ? `Book returned late. Fine amount: ₹${fine}` 
+    : "Book returned successfully. No fine.";
+
+
+const updateBookStatus = (bookId, listOfBooks) => 
+  listOfBooks.map(book =>
+    book.bookId === bookId 
+      ? { ...book, available: "True" } 
+      : book
+  );
+
+const updateUserBorrowedDetails = (user, bookId) => ({
+  ...user,
+  borrowedBooks: user.borrowedBooks.filter(book => book.bookId !== bookId)
+});
+
+
+const addToUserHistory = (user, borrowedBook, fine) => ({
+  ...user,
+  borrowingHistory: [
+    ...user.borrowingHistory,
+    {
+      ...borrowedBook,
+      returnedOn: new Date().toLocaleDateString(),
+      fine
+    }
+  ],
+  fines: user.fines + fine
+});
+
+const processBookReturn = (userId, bookId) => {
+  const user = usersData.find(user => user.userId === userId);
+  const borrowedBook = user.borrowedBooks.find(book => book.bookId === bookId);
+ 
+
+  const fine = calculateFine(borrowedBook.dueDate);
+
+  const updatedBooks = updateBookStatus(bookId, listOfBooks);
+
+  const userWithoutBook = updateUserBorrowedDetails(user, bookId);
+
+  const updatedUser = addToUserHistory(userWithoutBook, borrowedBook, fine);
+
   
+  const updatedUsers = usersData.map(user =>
+    user.userId === userId ? updatedUser : user
+  );
+
+  return {
+    message: getReturnMessage(fine),
+    updatedBooks,
+    updatedUsers
+  };
+};
 
 
  module.exports = {
   isUserEligibleToBorrow,
   checkBookAvailability,
-  calculateFine,
- 
-};
+  processBookReturn,
+  isBookBorrowedByUser
+ };
