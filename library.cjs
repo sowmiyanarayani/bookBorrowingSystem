@@ -4,7 +4,6 @@ const {
   checkBookAvailability,
   processBookReturn,
   isBookBorrowedByUser
-  
   } = require('./helper.cjs');
 
 const { listOfBooks, usersData } = config;
@@ -49,11 +48,12 @@ const registerUser = (name) => {
   return [...usersData, newUser]; 
 };
 
+
+
 console.log("Available books:", listOfAvailableBooks(listOfBooks));
 console.log("Borrow result:",JSON.stringify( borrowBook(2019007, 900124, usersData, listOfBooks),null,2));
 console.log("Return result:",JSON.stringify( returnBook(2019010, 19131, usersData, listOfBooks),null,2));
 console.log("borrow book:", borrowBook(2019007, 900124, usersData, listOfBooks))
-//console.log("Return book:", returnBook(2019010, 900126, usersData, listOfBooks))
 console.log("Search books", searchBooks("pancha"))
 console.log("user registration:", registerUser("Jency", usersData))
 
