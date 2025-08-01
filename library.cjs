@@ -24,9 +24,12 @@ const borrowBook = (userId, bookId) => {
 };
 
 
-const returnBook = (userId, bookId) => !isBookBorrowedByUser
-      ? "Book was not borrowed by this user." 
-      : processBookReturn(userId, bookId);
+const returnBook = (userId, bookId) => {
+  const user = usersData.find(user => user.userId === userId);
+  return !isBookBorrowedByUser(user, bookId)
+    ? "Book was not borrowed by this user."
+    : processBookReturn(userId, bookId);
+};
 
 
 const searchBooks = (query) => listOfBooks
@@ -52,8 +55,7 @@ const registerUser = (name) => {
 
 console.log("Available books:", listOfAvailableBooks(listOfBooks));
 console.log("Borrow result:",JSON.stringify( borrowBook(2019007, 900124, usersData, listOfBooks),null,2));
-console.log("Return result:",JSON.stringify( returnBook(2019010, 19131, usersData, listOfBooks),null,2));
-console.log("borrow book:", borrowBook(2019007, 900124, usersData, listOfBooks))
+console.log("Return result:",JSON.stringify( returnBook(2019007, 19131, usersData, listOfBooks),null,2));
 console.log("Search books", searchBooks("pancha"))
 console.log("user registration:", registerUser("Jency", usersData))
 
