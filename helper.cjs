@@ -65,7 +65,7 @@ const getReturnMessage = fine =>
     : "Book returned successfully. No fine.";
 
 
-const updateBookStatus = (bookId, listOfBooks) => 
+const updateBookStatus = (bookId) => 
   listOfBooks.map(book =>
     book.bookId === bookId 
       ? { ...book, available: "True" } 

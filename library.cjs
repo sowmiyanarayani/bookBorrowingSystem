@@ -16,12 +16,12 @@ listOfBooks
     .map(({ bookId, title, author }) => `${bookId}- ${title} by ${author}`);
 
 
-const borrowBook = (userId, bookId, usersData, booksData) => {
+const borrowBook = (userId, bookId) => {
   const user = usersData.find(user => user.userId === userId);
   
   return !isUserEligibleToBorrow(user)
     ? `${user.name} has reached the borrow limit.`
-    : checkBookAvailability(userId, bookId, usersData, booksData);
+    : checkBookAvailability(userId, bookId, usersData);
 };
 
 
@@ -37,7 +37,7 @@ const searchBooks = (query) => listOfBooks
     .map(book => `${book.bookId}. ${book.title} by ${book.author}`);
 
   
-const registerUser = (name, usersData) => {
+const registerUser = (name) => {
   let lastUserId = 192010;
   const newUser = {
     userId: ++lastUserId, 
