@@ -1,5 +1,7 @@
 const config = require('./config.json');
+
 const {
+  getUserById,
   isUserEligibleToBorrow,
   checkBookAvailability,
   processBookReturn,
@@ -10,52 +12,69 @@ const { listOfBooks, usersData } = config;
 
 
 const listOfAvailableBooks = () =>
-listOfBooks
-    .filter(book => book.available)
-    .map(({ bookId, title, author }) => `${bookId}- ${title} by ${author}`);
+  listOfBooks.reduce(( acc, curr ) => {
+  const { bookId, title, author, available } = curr;
+
+  return available
+        ? [...acc, `${bookId}- ${title} by ${author}`] 
+        : acc,
+    []
+  });
 
 
-const borrowBook = (userId, bookId) => {
-  const user = usersData.find(user => user.userId === userId);
-  
-  return !isUserEligibleToBorrow(user)
-    ? `${user.name} has reached the borrow limit.`
-    : checkBookAvailability(userId, bookId, usersData);
-};
+
+const borrowBook = (userId, bookId) => 
+  isUserEligibleToBorrow(userId)
+    ? checkBookAvailability(userId, bookId)
+    : "Borrow limit reached.";
 
 
 const returnBook = (userId, bookId) => {
-  const user = usersData.find(user => user.userId === userId);
-  return !isBookBorrowedByUser(user, bookId)
-    ? "Book was not borrowed by this user."
-    : processBookReturn(userId, bookId);
+  const user = getUserById(userId);
+  
+  return isBookBorrowedByUser(user, bookId)
+    ? processBookReturn(userId, bookId)
+    : "Book was not borrowed by this user.";
 };
 
 
-const searchBooks = (query) => listOfBooks
-   .filter(book =>
-     book.title.toLowerCase().includes(query) ||
-     book.author.toLowerCase().includes(query))
-    .map(book => `${book.bookId}. ${book.title} by ${book.author}`);
+const searchBooks = (query) =>
+  listOfBooks.reduce((acc, { bookId, title, author }) => {
+      const isMatch =
+      title.toLowerCase().includes(query) ||
+      author.toLowerCase().includes(query);
+
+    return isMatch
+      ? [...acc, `${bookId}. ${title} by ${author}`]
+      : acc;
+  }, []);
 
   
-const registerUser = (name) => {
-  let lastUserId = 192010;
-  const newUser = {
-    userId: ++lastUserId, 
-    name,
-    borrowedBooks: [],
-    history: []
-  };
 
-  return [...usersData, newUser]; 
+const addUser = (usersData, ...names) => {
+  const lastUserId = Math.max(...usersData.map(u => u.userId));
+  let newId = lastUserId;
+
+  const newUsers = names.map(name => {
+    newId += 1;
+    return {
+      userId: newId,
+      name,
+      borrowedBooks: [],
+      borrowingHistory: [],
+      fines: 0
+    };
+  });
+
+  return [...usersData, ...newUsers];
 };
 
 
 
-console.log("Available books:", listOfAvailableBooks(listOfBooks));
-console.log("Borrow result:",JSON.stringify( borrowBook(2019007, 900124, usersData, listOfBooks),null,2));
-console.log("Return result:",JSON.stringify( returnBook(2019007, 19131, usersData, listOfBooks),null,2));
-console.log("Search books", searchBooks("pancha"))
-console.log("user registration:", registerUser("Jency", usersData))
+
+console.log("Available books:", listOfAvailableBooks());
+console.log("Borrow result:",JSON.stringify( borrowBook(2019007, 900123), null, 2));
+console.log("Return result:",JSON.stringify( returnBook(2019010, 19131), null, 2));
+console.log("Search books", searchBooks("pon"));
+console.log("user registration:", JSON.stringify(addUser(usersData,"Jency","willison"), null, 2));
 

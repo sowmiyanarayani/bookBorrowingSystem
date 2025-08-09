@@ -5,70 +5,70 @@
       "title": "The Great Gatsby",
       "author": "F. Scott Fitzgerald",
       "genre": "Classic",
-      "available": "True"
+      "available": true
     },
     {
       "bookId":900124,
       "title": "1984",
       "author": "George Orwell",
       "genre": "Dystopian",
-      "available": "True"
+      "available": false
     },
     {
       "bookId":900125,
       "title": "To Kill a Mockingbird",
       "author": "Harper Lee",
       "genre": "Classic",
-      "available": "True"
+      "available": true
     },
     {
       "bookId":900126,
       "title": "Dune",
       "author": "Frank Herbert",
       "genre": "Science Fiction",
-      "available": "True"
+      "available": true
     },
     {
       "bookId":900127,
       "title": "Panchatantra Stories",
       "author": "Vishnu Sharma",
       "genre": "Short Stories",
-      "available": "True"
+      "available": true
     },
     {
       "bookId":900128,
       "title": "The Hitchhiker's Guide to the Galaxy",
       "author": "Douglas Adams",
       "genre": "Science Fiction",
-      "available": "True"
+      "available": true
     },
     {
       "bookId":900129,
       "title": "Jungle Book",
       "author": "Rudyard Kipling",
       "genre": "Adventure",
-      "available": "True"
+      "available": true
     },
     {
       "bookId":900130,
       "title": "Ponniyin Selvan",
       "author": "Kalki Krishnamurthy",
       "genre": "Historical Fiction",
-      "available": "True"
+      "available": false
     },
     {
       "bookId":900131,
       "title": "Thirukkural",
       "author": "Thiruvalluvar",
       "genre": "Didactic Literature",
-      "available": "True"
+      "available": true
     },
     {
       "bookId":19131,
       "title": "Silappathikaram",
       "author": "Ilango Adigal",
       "genre": "Epic Poetry",
-      "available": "True" 
+      "available": false
     }
   ],
 
@@ -123,8 +123,7 @@
         "title": "Jungle Book",
         "dueDate":"20/01/2025"
       }
-   ],
-    "fines": 0
+   ]
   } 
  ],
  "borrowLimit":3,
