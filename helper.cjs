@@ -1,19 +1,26 @@
 const config = require('./config.json');
 
-const { borrowLimit, maximumBorrowingDays, usersData, listOfBooks} = config;
+const { 
+  borrowLimit, 
+  maximumBorrowingDays, 
+  usersData, 
+  listOfBooks } = config;
 
 const milliSecondPerDay = 1000 * 60 * 60 * 24;
 
 const getCurrentDate = () => new Date().toLocaleDateString();
 
-const getUserById = (userId) => usersData.find(user => user.userId === userId);
+const getUserById = (userId) =>
+  usersData.find(user => user.userId === userId);
 
-const getBookById = (bookId) => listOfBooks.find(book => book.bookId === bookId);
+const getBookById = (bookId) =>
+  listOfBooks.find(book => book.bookId === bookId);
 
 const calculateDueDate = () =>
-  new Date(Date.now() + maximumBorrowingDays * milliSecondPerDay).toLocaleDateString();
+  new Date(Date.now() + maximumBorrowingDays * milliSecondPerDay)
+    .toLocaleDateString();
 
-const updateUserBorrowing = (user, book ) => ({
+const updateUserBorrowing = (user, book) => ({
   ...user,
   borrowedBooks: [
     ...user.borrowedBooks,
@@ -23,26 +30,21 @@ const updateUserBorrowing = (user, book ) => ({
       dueDate: calculateDueDate(),
     }
   ]
- });
-
+});
 
 const checkOutProcess = (userId, book) => {
   book.available = false;
-
   return usersData.map(user =>
     user.userId === userId ? updateUserBorrowing(user, book) : user
   );
 };
 
-
 const checkBookAvailability = (userId, bookId) => {
   const book = getBookById(bookId);
-
-   return book.available
+  return book.available
     ? checkOutProcess(userId, book)
     : "Book not Available";
 };
-
 
 const isUserEligibleToBorrow = (userId) => {
   const user = getUserById(userId);
@@ -50,30 +52,27 @@ const isUserEligibleToBorrow = (userId) => {
 };
 
 const calculateFine = (dueDate) => {
-  const currentDate = getCurrentDate();
+  const currentDate = new Date(getCurrentDate());
   const due = new Date(dueDate);
+
   return currentDate > due
     ? Math.ceil((currentDate - due) / milliSecondPerDay) * 2
     : 0;
 };
- 
 
-const isBookBorrowedByUser = (user, bookId) => {
+const isBookBorrowedByUser = (userId, bookId) => {
+  const user = getUserById(userId);
   return user && user.borrowedBooks.some(book => book.bookId === bookId);
 };
 
-
-const getReturnStatus = (fine) => 
-  fine 
-    ? `Book returned late. Fine amount: ₹${fine}` 
+const getReturnStatus = (fine) =>
+  fine
+    ? `Book returned late. Fine amount: ₹${fine}`
     : "Book returned successfully. No fine.";
-
 
 const updateBookAvailability = (bookId) =>
   listOfBooks.map(book =>
-    book.bookId === bookId
-      ? { ...book, available: true }
-      : book
+    book.bookId === bookId ? { ...book, available: true } : book
   );
 
 const removeBookFromUser = (user, bookId) => ({
@@ -81,29 +80,31 @@ const removeBookFromUser = (user, bookId) => ({
   borrowedBooks: user.borrowedBooks.filter(book => book.bookId !== bookId),
 });
 
-const addReturnedBookToHistory = (user, borrowedBook, fine) => ({
+const addReturnedBookToHistory = (user, borrowedBook) => ({
   ...user,
   borrowingHistory: [
     ...user.borrowingHistory,
     {
       ...borrowedBook,
-      returnedOn: getCurrentDate(),  
+      returnedOn: getCurrentDate(),
     }
   ]
 });
 
 const processBookReturn = (userId, bookId) => {
   const user = getUserById(userId);
-  const borrowedBook = user.borrowedBooks.find(b => b.bookId === bookId);
+  const borrowedBook = user.borrowedBooks.find(book => book.bookId === bookId);
   const fine = calculateFine(borrowedBook.dueDate);
 
   const updatedUser = addReturnedBookToHistory(
     removeBookFromUser(user, bookId),
-    borrowedBook,
-    fine
+    borrowedBook
   );
 
-  const updatedUsers = usersData.map(u => (u.userId === userId ? updatedUser : u));
+  const updatedUsers = usersData.map(user =>
+    user.userId === userId ? updatedUser : user
+  );
+
   const updatedBooks = updateBookAvailability(bookId);
 
   return {
@@ -113,10 +114,10 @@ const processBookReturn = (userId, bookId) => {
   };
 };
 
- module.exports = {
+module.exports = {
   getUserById,
   isUserEligibleToBorrow,
   checkBookAvailability,
   processBookReturn,
   isBookBorrowedByUser
- };
+};
