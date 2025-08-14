@@ -5,70 +5,80 @@
       "title": "The Great Gatsby",
       "author": "F. Scott Fitzgerald",
       "genre": "Classic",
-      "available": true
+      "available": true,
+      "reservations": []
     },
     {
       "bookId":900124,
       "title": "1984",
       "author": "George Orwell",
       "genre": "Dystopian",
-      "available": false
+      "available": false,
+      "reservations": []
     },
     {
       "bookId":900125,
       "title": "To Kill a Mockingbird",
       "author": "Harper Lee",
       "genre": "Classic",
-      "available": true
+      "available": true,
+       "reservations": []
     },
     {
       "bookId":900126,
       "title": "Dune",
       "author": "Frank Herbert",
       "genre": "Science Fiction",
-      "available": true
+      "available": true,
+      "reservations": []
     },
     {
       "bookId":900127,
       "title": "Panchatantra Stories",
       "author": "Vishnu Sharma",
       "genre": "Short Stories",
-      "available": true
+      "available": true,
+      "reservations": []
     },
     {
       "bookId":900128,
       "title": "The Hitchhiker's Guide to the Galaxy",
       "author": "Douglas Adams",
       "genre": "Science Fiction",
-      "available": true
+      "available": true,
+      "reservations": true
     },
     {
       "bookId":900129,
       "title": "Jungle Book",
       "author": "Rudyard Kipling",
       "genre": "Adventure",
-      "available": true
+      "available": true,
+      "reservations": []
     },
     {
       "bookId":900130,
       "title": "Ponniyin Selvan",
       "author": "Kalki Krishnamurthy",
       "genre": "Historical Fiction",
-      "available": false
+      "available": false,
+       "reservations": []
     },
     {
       "bookId":900131,
       "title": "Thirukkural",
       "author": "Thiruvalluvar",
       "genre": "Didactic Literature",
-      "available": true
+      "available": true,
+      "reservations": []
     },
     {
       "bookId":19131,
       "title": "Silappathikaram",
       "author": "Ilango Adigal",
       "genre": "Epic Poetry",
-      "available": false
+      "available": false,
+      "reservations": []
     }
   ],
 
@@ -77,16 +87,14 @@
     "userId":2019007,
     "name": "Alice",
     "borrowedBooks": [],
-    "borrowingHistory": [],
-    "fines": 0
-   },
+    "borrowingHistory": []
+  },
   {
     "userId":2019008,
     "name": "Bob",
     "borrowedBooks": [],
-    "borrowingHistory": [],
-    "fines": 0
-   },
+    "borrowingHistory": []
+  },
   {
     "userId":2019010,
     "name": "Charlie",

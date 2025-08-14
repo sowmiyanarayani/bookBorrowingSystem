@@ -8,7 +8,7 @@ const {
 
 const milliSecondPerDay = 1000 * 60 * 60 * 24;
 
-const getCurrentDate = () => new Date().toLocaleDateString();
+const currentDate = () => new Date().toLocaleDateString();
 
 const getUserById = (userId) =>
   usersData.find(user => user.userId === userId);
@@ -52,7 +52,7 @@ const isUserEligibleToBorrow = (userId) => {
 };
 
 const calculateFine = (dueDate) => {
-  const currentDate = new Date(getCurrentDate());
+  const currentDate = new Date();
   const due = new Date(dueDate);
 
   return currentDate > due
@@ -86,7 +86,7 @@ const addReturnedBookToHistory = (user, borrowedBook) => ({
     ...user.borrowingHistory,
     {
       ...borrowedBook,
-      returnedOn: getCurrentDate(),
+      returnedOn: currentDate().toLocaleDateString,
     }
   ]
 });
@@ -114,10 +114,26 @@ const processBookReturn = (userId, bookId) => {
   };
 };
 
+const addUserToReservations = (book, userId) => {
+    book.reservations = [...book.reservations, userId];
+  return `Book reserved successfully. Your position in queue: ${book.reservations.length}`;
+};
+
+const addReservation = (book, userId) => {
+  book.reservations = book.reservations || [];
+  const bookReservation = book.reservations.find(id => id === userId)
+
+  return bookReservation
+    ? "You have already reserved this book."
+    : addUserToReservations(book, userId);
+};
+
 module.exports = {
   getUserById,
+  getBookById,
   isUserEligibleToBorrow,
   checkBookAvailability,
   processBookReturn,
-  isBookBorrowedByUser
+  isBookBorrowedByUser,
+  addReservation,
 };
