@@ -8,7 +8,7 @@ const {
 
 const milliSecondPerDay = 1000 * 60 * 60 * 24;
 
-const currentDate = () => new Date().toLocaleDateString();
+const currentDate = new Date();
 
 const getUserById = (userId) =>
   usersData.find(user => user.userId === userId);
@@ -52,7 +52,6 @@ const isUserEligibleToBorrow = (userId) => {
 };
 
 const calculateFine = (dueDate) => {
-  const currentDate = new Date();
   const due = new Date(dueDate);
 
   return currentDate > due
@@ -62,7 +61,7 @@ const calculateFine = (dueDate) => {
 
 const isBookBorrowedByUser = (userId, bookId) => {
   const user = getUserById(userId);
-  return user && user.borrowedBooks.some(book => book.bookId === bookId);
+  return user ? user.borrowedBooks.some(book => book.bookId === bookId) : false;
 };
 
 const getReturnStatus = (fine) =>
@@ -86,36 +85,34 @@ const addReturnedBookToHistory = (user, borrowedBook) => ({
     ...user.borrowingHistory,
     {
       ...borrowedBook,
-      returnedOn: currentDate().toLocaleDateString,
+      returnedOn: currentDate.toLocaleDateString,
     }
   ]
 });
+
+
+const getUpdatedUsersAfterReturn = (userId, bookId, borrowedBook) => {
+  return usersData.map(user =>
+    user.userId === userId
+      ? addReturnedBookToHistory(removeBookFromUser(user, bookId),borrowedBook)
+      : user
+  );
+};
 
 const processBookReturn = (userId, bookId) => {
   const user = getUserById(userId);
   const borrowedBook = user.borrowedBooks.find(book => book.bookId === bookId);
   const fine = calculateFine(borrowedBook.dueDate);
 
-  const updatedUser = addReturnedBookToHistory(
-    removeBookFromUser(user, bookId),
-    borrowedBook
-  );
-
-  const updatedUsers = usersData.map(user =>
-    user.userId === userId ? updatedUser : user
-  );
-
-  const updatedBooks = updateBookAvailability(bookId);
-
   return {
     message: getReturnStatus(fine),
-    updatedBooks,
-    updatedUsers
+    updatedBooks: updateBookAvailability(bookId),
+    updatedUsers: getUpdatedUsersAfterReturn(userId, bookId, borrowedBook)
   };
 };
 
 const addUserToReservations = (book, userId) => {
-    book.reservations = [...book.reservations, userId];
+  book.reservations = [...book.reservations, userId];
   return `Book reserved successfully. Your position in queue: ${book.reservations.length}`;
 };
 
