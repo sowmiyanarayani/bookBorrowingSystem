@@ -91,10 +91,12 @@ const addReturnedBookToHistory = (user, borrowedBook) => ({
 });
 
 
-const getUpdatedUsersAfterReturn = (userId, bookId, borrowedBook) => {
+const getUpdatedUsersAfterReturn = (data) => {
+  const { userId, bookId, borrowedBook } = data;
+
   return usersData.map(user =>
     user.userId === userId
-      ? addReturnedBookToHistory(removeBookFromUser(user, bookId),borrowedBook)
+      ? addReturnedBookToHistory(removeBookFromUser(user, bookId), borrowedBook)
       : user
   );
 };
@@ -107,22 +109,17 @@ const processBookReturn = (userId, bookId) => {
   return {
     message: getReturnStatus(fine),
     updatedBooks: updateBookAvailability(bookId),
-    updatedUsers: getUpdatedUsersAfterReturn(userId, bookId, borrowedBook)
+    updatedUsers: getUpdatedUsersAfterReturn({
+      userId,
+      bookId,
+      borrowedBook
+    })
   };
 };
 
 const addUserToReservations = (book, userId) => {
   book.reservations = [...book.reservations, userId];
   return `Book reserved successfully. Your position in queue: ${book.reservations.length}`;
-};
-
-const addReservation = (book, userId) => {
-  book.reservations = book.reservations || [];
-  const bookReservation = book.reservations.find(id => id === userId)
-
-  return bookReservation
-    ? "You have already reserved this book."
-    : addUserToReservations(book, userId);
 };
 
 module.exports = {
@@ -132,5 +129,5 @@ module.exports = {
   checkBookAvailability,
   processBookReturn,
   isBookBorrowedByUser,
-  addReservation,
+  addUserToReservations
 };

@@ -5,7 +5,7 @@ const {
   checkBookAvailability,
   processBookReturn,
   isBookBorrowedByUser,
-  addReservation,
+  addUserToReservations,
   getBookById,
 } = require('./helper.cjs');
 
@@ -65,7 +65,7 @@ const reserveBook = (userId, bookId) => {
 
    return book.available
     ? "Book is available. You can borrow it instead of reserving."
-    : addReservation(book, userId);
+    : addUserToReservations(book, userId);
 };
 
 console.log("Available books:", listOfAvailableBooks());

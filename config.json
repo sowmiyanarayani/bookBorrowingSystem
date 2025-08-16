@@ -46,7 +46,7 @@
       "author": "Douglas Adams",
       "genre": "Science Fiction",
       "available": true,
-      "reservations": true
+      "reservations": []
     },
     {
       "bookId":900129,
