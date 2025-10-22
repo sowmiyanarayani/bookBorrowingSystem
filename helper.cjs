@@ -4,17 +4,22 @@ const {
   borrowLimit, 
   maximumBorrowingDays, 
   usersData, 
-  listOfBooks } = config;
+  listOfBooks,
+  finePerDay } = config;
 
 const milliSecondPerDay = 1000 * 60 * 60 * 24;
 
 const currentDate = new Date();
 
-const getUserById = (userId) =>
-  usersData.find(user => user.userId === userId);
+const getUserById = (userId) => {
+  const user = usersData.find(user => user.userId === userId);
+  return user ? user : "Not Found";
+};
 
-const getBookById = (bookId) =>
-  listOfBooks.find(book => book.bookId === bookId);
+const getBookById = (bookId) => {
+  const book = listOfBooks.find(book => book.bookId === bookId);
+  return book ? book : "Not Found";
+};
 
 const calculateDueDate = () =>
   new Date(Date.now() + maximumBorrowingDays * milliSecondPerDay)
@@ -48,21 +53,39 @@ const checkBookAvailability = (userId, bookId) => {
 
 const isUserEligibleToBorrow = (userId) => {
   const user = getUserById(userId);
-  return user.borrowedBooks.length < borrowLimit;
+  
+  if (user === "Not Found")
+     return "Invalid user ID.";
+
+   return user.borrowedBooks.length < borrowLimit
+    ? true
+    : "Borrow limit reached.";
 };
+
+
 
 const calculateFine = (dueDate) => {
   const due = new Date(dueDate);
 
   return currentDate > due
-    ? Math.ceil((currentDate - due) / milliSecondPerDay) * 2
+    ? Math.ceil((currentDate - due) / milliSecondPerDay) * finePerDay
     : 0;
 };
 
+// const isBookBorrowedByUser = (userId, bookId) => {
+//   const user = getUserById(userId);
+//   return user ? user.borrowedBooks.some(book => book.bookId === bookId) : false;
+// };
+
 const isBookBorrowedByUser = (userId, bookId) => {
   const user = getUserById(userId);
-  return user ? user.borrowedBooks.some(book => book.bookId === bookId) : false;
+  if (user === "Not Found") 
+    return "Enter a valid user ID.";
+
+  const borrowed = user.borrowedBooks.some(book => book.bookId === bookId);
+  return borrowed ? true : "Book was not borrowed by this user.";
 };
+
 
 const getReturnStatus = (fine) =>
   fine
@@ -90,7 +113,6 @@ const addReturnedBookToHistory = (user, borrowedBook) => ({
   ]
 });
 
-
 const getUpdatedUsersAfterReturn = (data) => {
   const { userId, bookId, borrowedBook } = data;
 
@@ -117,10 +139,15 @@ const processBookReturn = (userId, bookId) => {
   };
 };
 
-const addUserToReservations = (book, userId) => {
+const updateReservations = (book, userId) => {
   book.reservations = [...book.reservations, userId];
   return `Book reserved successfully. Your position in queue: ${book.reservations.length}`;
-};
+ };
+
+const addUserToReservations = (book, userId) =>
+  book.reservations.includes(userId)
+    ? "You have already reserved this book."
+    : updateReservations(book, userId);
 
 module.exports = {
   getUserById,
