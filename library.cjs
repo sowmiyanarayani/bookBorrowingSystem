@@ -7,8 +7,7 @@ const {
   isBookBorrowedByUser,
   addUserToReservations,
   getBookById,
-  getUserById
-} = require('./helper.cjs');
+ } = require('./helper.cjs');
 
 const { listOfBooks, usersData } = config;
 
@@ -27,12 +26,6 @@ const listOfAvailableBooks = () =>
     ? checkBookAvailability(userId, bookId)
     : eligibility;
 };
-
-
-// const returnBook = (userId, bookId) => 
-//   isBookBorrowedByUser(userId, bookId)
-//     ? processBookReturn(userId, bookId)
-//     : "Book was not borrowed by this user.";
 
 const returnBook = (userId, bookId) => {
   const borrowedStatus = isBookBorrowedByUser(userId, bookId);
