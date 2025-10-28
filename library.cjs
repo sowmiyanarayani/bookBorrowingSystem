@@ -66,25 +66,20 @@ const newUsers = (...names) => {
     : addUserToReservations(book, userId);};
 
 
-const main = () => {
-  const results = {};
+const libraryResult = () => ({
+  availableBooks: listOfAvailableBooks(),
+  borrowResult: borrowBook(2019007, 900123),
+  returnResult: returnBook(10, 19131),
+  searchBooks: searchBooks("sila"),
+  newUsers: newUsers("Jency", "Willison", "Rose"),
+  reservations: [
+    reserveBook(2019007, 900125),
+    reserveBook(2019010, 19131),
+    reserveBook(2019010, 19131),
+    reserveBook(2019008, 19131)
+  ]
+});
 
-  results.availableBooks = listOfAvailableBooks();
-
-  results.borrowResult = borrowBook(2019007, 900123);
-
-  results.returnResult = returnBook(10, 19131);
-
-  results.searchBooks = searchBooks("sila");
-
-  results.newUsers = newUsers("Jency", "Willison", "Rose");
-
-  results.addReservation1 = reserveBook(2019007, 900125);
-  results.addReservation2 = reserveBook(2019010, 19131);
-  results.addReservation3 = reserveBook(2019010, 19131);
-  results.addReservation4 = reserveBook(2019008, 19131);
-
-  console.log("Library Operations Results:", JSON.stringify(results, null, 2));
-};
+const main = () => console.log("Library Operation Results:",JSON.stringify(libraryResult(), null, 2));
 
 main();
