@@ -2,25 +2,23 @@ const config = require('./config.json');
 
 const {
   borrowLimit,
-  maximumBorrowingDays,
+  maximumBorrowDays,
   usersData,
   listOfBooks,
-  finePerDay
+  finePerDay,
 } = config;
 
 const milliSecondPerDay = 1000 * 60 * 60 * 24;
-
 const currentDate = new Date();
 
 const findUserById = (userId) =>
-  usersData.find(user => user.userId === userId) || "Not Found";
+  usersData.find((user) => user.userId === userId) || "Not Found";
 
 const findBookById = (bookId) =>
-  listOfBooks.find(book => book.bookId === bookId) || "Not Found";
+  listOfBooks.find((book) => book.bookId === bookId) || "Not Found";
 
 const calculateDueDate = () =>
-  new Date(Date.now() + maximumBorrowingDays * milliSecondPerDay)
-    .toLocaleDateString();
+  new Date(Date.now() + maximumBorrowDays * milliSecondPerDay).toLocaleDateString();
 
 const addBorrowedBookToUser = (user, book) => ({
   ...user,
@@ -30,14 +28,14 @@ const addBorrowedBookToUser = (user, book) => ({
       bookId: book.bookId,
       title: book.title,
       dueDate: calculateDueDate(),
-    }
-  ]
+    },
+  ],
 });
 
 const processBookCheckout = (userId, book) => {
   book.available = false;
 
-  return usersData.map(user =>
+  return usersData.map((user) =>
     user.userId === userId ? addBorrowedBookToUser(user, book) : user
   );
 };
@@ -52,10 +50,9 @@ const checkBookAvailability = (userId, bookId) => {
 
 const isUserEligibleToBorrow = (userId) => {
   const user = findUserById(userId);
+  if (!user) return "Invalid user ID.";
 
-  if (user === "Not Found") return "Enter a valid user ID.";
-
-  return user.borrowedBooks.length < borrowLimit
+  return (user.borrowedBooks?.length || 0) < borrowLimit
     ? true
     : "Borrow limit reached.";
 };
@@ -70,10 +67,9 @@ const calculateOverdueFine = (dueDate) => {
 
 const validateBookBorrowRecord = (userId, bookId) => {
   const user = findUserById(userId);
-  if (user === "Not Found") return "Enter a valid user ID.";
+  if (!user) return false;
 
-  const borrowed = user.borrowedBooks.some(book => book.bookId === bookId);
-  return borrowed ? true : "Book was not borrowed by this user.";
+  return user.borrowedBooks.some((book) => book.bookId === bookId);
 };
 
 const getBookReturnMessage = (fine) =>
@@ -82,13 +78,13 @@ const getBookReturnMessage = (fine) =>
     : "Book returned successfully. No fine.";
 
 const markBookAsAvailable = (bookId) =>
-  listOfBooks.map(book =>
+  listOfBooks.map((book) =>
     book.bookId === bookId ? { ...book, available: true } : book
   );
 
 const removeBookFromUser = (user, bookId) => ({
   ...user,
-  borrowedBooks: user.borrowedBooks.filter(book => book.bookId !== bookId),
+  borrowedBooks: user.borrowedBooks.filter((book) => book.bookId !== bookId),
 });
 
 const addReturnedBookToHistory = (user, borrowedBook) => ({
@@ -97,15 +93,13 @@ const addReturnedBookToHistory = (user, borrowedBook) => ({
     ...user.borrowingHistory,
     {
       ...borrowedBook,
-      returnedOn: currentDate.toLocaleDateString(), 
-    }
-  ]
+      returnedOn: currentDate.toLocaleDateString(),
+    },
+  ],
 });
 
-const getUpdatedUsersAfterReturn = (data) => {
-  const { userId, bookId, borrowedBook, users } = data;
-
-  return users.map(user =>
+const getUpdatedUsersAfterReturn = ({ userId, bookId, borrowedBook, users }) => {
+  return users.map((user) =>
     user.userId === userId
       ? addReturnedBookToHistory(removeBookFromUser(user, bookId), borrowedBook)
       : user
@@ -114,13 +108,18 @@ const getUpdatedUsersAfterReturn = (data) => {
 
 const handleBookReturn = (userId, bookId) => {
   const user = findUserById(userId);
-  const borrowedBook = user.borrowedBooks.find(book => book.bookId === bookId);
+  const borrowedBook = user.borrowedBooks.find((book) => book.bookId === bookId);
   const fine = calculateOverdueFine(borrowedBook.dueDate);
 
   return {
     message: getBookReturnMessage(fine),
     updatedBooks: markBookAsAvailable(bookId),
-    updatedUsers: getUpdatedUsersAfterReturn({ userId, bookId, borrowedBook }),
+    updatedUsers: getUpdatedUsersAfterReturn({
+      userId,
+      bookId,
+      borrowedBook,
+      users: usersData,
+    }),
   };
 };
 

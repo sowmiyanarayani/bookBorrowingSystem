@@ -7,6 +7,7 @@ const {
   validateBookBorrowRecord,
   addUserToReservations,
   findBookById,
+  findUserById,
 } = require('./helper.cjs');
 
 const { listOfBooks, usersData } = config;
@@ -20,16 +21,16 @@ const booksCatalog = () =>
 
 const bookBorrowProcess = (userId, bookId) => {
   const eligibility = isUserEligibleToBorrow(userId);
-  return eligibility === true
-    ? checkBookAvailability(userId, bookId)
-    : eligibility;
+  if (eligibility !== true) return eligibility;
+  return checkBookAvailability(userId, bookId);
 };
 
 const processBookReturn = (userId, bookId) => {
-  const borrowedStatus = validateBookBorrowRecord(userId, bookId);
-  return borrowedStatus === true
+  const user = findUserById(userId);
+  if (user === "Not Found") return "Enter a valid user ID.";
+  return validateBookBorrowRecord(userId, bookId)
     ? handleBookReturn(userId, bookId)
-    : borrowedStatus;
+    : "Book was not borrowed by this user.";
 };
 
 const searchBook = (query) =>
@@ -44,7 +45,7 @@ const searchBook = (query) =>
   }, []);
 
 const addNewUsers = (...names) => {
-  const lastUserId = Math.max(...usersData.map(user => user.userId));
+  const lastUserId = Math.max(...usersData.map((user) => user.userId));
 
   const newUsers = names.map((name, index) => ({
     userId: lastUserId + index + 1,
@@ -65,8 +66,8 @@ const reserveBook = (userId, bookId) => {
 
 const getLibraryOperationSummary = () => ({
   availableBooks: booksCatalog(),
-  borrowResult: bookBorrowProcess(207, 900123),
-  returnResult: processBookReturn(10, 19131),
+  borrowResult: bookBorrowProcess(2019007, 900123),
+  returnResult: processBookReturn(2019010, 19131),
   searchBooks: searchBook("sila"),
   registeredUsers: addNewUsers("Jency", "Willison", "Rose"),
   reservations: [
@@ -77,8 +78,11 @@ const getLibraryOperationSummary = () => ({
   ],
 });
 
-
-const main = () =>
-  console.log("Library Operation Results:", JSON.stringify(getLibraryOperationSummary(), null, 2));
+const main = () => {
+  console.log(
+    "Library Operation Results:",
+    JSON.stringify(getLibraryOperationSummary(), null, 2)
+  );
+};
 
 main();

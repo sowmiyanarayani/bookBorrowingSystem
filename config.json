@@ -136,5 +136,5 @@
  ],
  "borrowLimit":3,
  "finePerDay":2,
- "maximumBorrowingDays":7
+ "maximumBorrowDays":7
  }
